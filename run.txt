@@ -1,5 +1,0 @@
-node server/server.js
-
-http://localhost:5000
-
-admin@example.com    admin123
