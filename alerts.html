@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Stock Alerts — InvenTrack</title><link rel="stylesheet" href="css/style.css"></head>
+<body>
+<div class="app-shell">
+  <button class="sidebar-toggle" id="sidebar-toggle">☰</button>
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+  <nav class="sidebar" id="sidebar"></nav>
+  <div class="main-content">
+    <div class="topbar">
+      <div class="topbar-left"><h1>Stock Alerts</h1><div class="breadcrumb">Items needing restocking</div></div>
+      <div class="topbar-right">
+        <button class="btn btn-primary btn-sm" onclick="loadAlerts()">↻ Refresh</button>
+      </div>
+    </div>
+    <div class="page-content fade-in">
+      <div class="urgency-grid">
+        <div class="urgency-card critical"><h3 id="count-critical">—</h3><p>Out of stock</p></div>
+        <div class="urgency-card warning"><h3 id="count-warning">—</h3><p>Low stock</p></div>
+        <div class="urgency-card healthy"><h3 id="count-healthy">—</h3><p>Healthy</p></div>
+        <div class="urgency-card total"><h3 id="count-total">—</h3><p>Total products</p></div>
+      </div>
+      <div class="filter-bar">
+        <span style="font-size:12px;color:var(--text-muted);font-weight:600">Filter:</span>
+        <button class="filter-btn active" onclick="setFilter('all',this)">All</button>
+        <button class="filter-btn" onclick="setFilter('critical',this)">Critical</button>
+        <button class="filter-btn" onclick="setFilter('low',this)">Low Stock</button>
+        <input class="search-input" id="alert-search" placeholder="Search product..." oninput="renderTable()" style="margin-left:auto">
+      </div>
+      <div class="card">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Product</th><th>Category</th><th>Current Stock</th><th>Reorder Level</th><th>Shortage</th><th>Urgency</th><th>Action</th></tr></thead>
+            <tbody id="alerts-table"><tr><td colspan="7" style="text-align:center;color:var(--text-muted);padding:24px">Loading...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Reorder Modal — stays on same page -->
+<div class="modal-overlay" id="reorder-modal" onclick="if(event.target===this)closeReorderModal()">
+  <div class="modal-box">
+    <h3>Reorder Stock</h3>
+    <p>Restocking: <strong id="ro-product-name"></strong></p>
+    <div class="form-group"><label>Quantity to Order</label><input type="number" id="ro-qty" min="1" value="10"></div>
+    <div class="form-group"><label>Cost Price per Unit (₹)</label><input type="number" id="ro-cost" min="0" step="0.01" placeholder="0.00"></div>
+    <div class="form-group"><label>Supplier Name</label><input type="text" id="ro-supplier" placeholder="Supplier name"></div>
+    <div id="ro-msg"></div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeReorderModal()">Cancel</button>
+      <button class="btn btn-success" onclick="submitReorder()">Confirm Reorder</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/sidebar.js"></script>
+<script src="js/alerts.js"></script>
+</body></html>

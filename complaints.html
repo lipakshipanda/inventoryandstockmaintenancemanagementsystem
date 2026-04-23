@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Complaints — InvenTrack</title><link rel="stylesheet" href="css/style.css"></head>
+<body>
+<div class="app-shell">
+  <button class="sidebar-toggle" id="sidebar-toggle">☰</button>
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+  <nav class="sidebar" id="sidebar"></nav>
+  <div class="main-content">
+    <div class="topbar">
+      <div class="topbar-left"><h1>Complaints</h1><div class="breadcrumb">File and track complaints — resolved within 10 days</div></div>
+      <div class="topbar-right"><button class="btn btn-primary btn-sm" onclick="openNewComplaint()">+ New Complaint</button></div>
+    </div>
+    <div class="page-content fade-in">
+      <div class="stats-grid" style="grid-template-columns:repeat(auto-fit,minmax(150px,1fr))">
+        <div class="stat-card orange"><div class="stat-icon">📋</div><h3 id="c-open">—</h3><p>Open</p></div>
+        <div class="stat-card purple"><div class="stat-icon">⏳</div><h3 id="c-inprogress">—</h3><p>In Progress</p></div>
+        <div class="stat-card green"><div class="stat-icon">✅</div><h3 id="c-resolved">—</h3><p>Resolved</p></div>
+        <div class="stat-card red"><div class="stat-icon">🚨</div><h3 id="c-overdue">—</h3><p>Overdue</p></div>
+      </div>
+      <div class="filter-bar">
+        <span style="font-size:12px;color:var(--text-muted);font-weight:600">Status:</span>
+        <button class="filter-btn active" onclick="setFilter('all',this)">All</button>
+        <button class="filter-btn" onclick="setFilter('open',this)">Open</button>
+        <button class="filter-btn" onclick="setFilter('in-progress',this)">In Progress</button>
+        <button class="filter-btn" onclick="setFilter('resolved',this)">Resolved</button>
+        <input class="search-input" id="c-search" placeholder="Search complaints..." oninput="renderComplaints()" style="margin-left:auto">
+      </div>
+      <div id="complaints-list"><div style="text-align:center;color:var(--text-muted);padding:32px">Loading...</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- New Complaint Modal -->
+<div class="modal-overlay" id="new-complaint-modal" onclick="if(event.target===this)closeModals()">
+  <div class="modal-box">
+    <h3>File a Complaint</h3>
+    <p>Describe your issue clearly. It will be addressed within 10 days.</p>
+    <div class="form-group"><label>Title</label><input type="text" id="c-title" placeholder="Brief summary of the issue"></div>
+    <div class="form-group"><label>Category</label>
+      <select id="c-category">
+        <option value="HR">HR / Workplace</option>
+        <option value="Operations">Operations</option>
+        <option value="Inventory">Inventory / Stock</option>
+        <option value="System">System / Technical</option>
+        <option value="Other">Other</option>
+      </select>
+    </div>
+    <div class="form-group"><label>Priority</label>
+      <select id="c-priority">
+        <option value="low">Low</option>
+        <option value="medium" selected>Medium</option>
+        <option value="high">High</option>
+      </select>
+    </div>
+    <div class="form-group"><label>Description</label><textarea id="c-description" placeholder="Describe the issue in detail..."></textarea></div>
+    <div id="new-c-msg"></div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModals()">Cancel</button>
+      <button class="btn btn-primary" onclick="submitComplaint()">Submit Complaint</button>
+    </div>
+  </div>
+</div>
+
+<!-- Respond Modal -->
+<div class="modal-overlay" id="respond-modal" onclick="if(event.target===this)closeModals()">
+  <div class="modal-box">
+    <h3>Respond to Complaint</h3>
+    <p id="respond-complaint-title" style="font-weight:600;color:var(--text)"></p>
+    <input type="hidden" id="respond-id">
+    <div class="form-group"><label>Response</label><textarea id="respond-text" placeholder="Describe the action taken or resolution..."></textarea></div>
+    <div class="form-group"><label>Update Status</label>
+      <select id="respond-status">
+        <option value="in-progress">In Progress</option>
+        <option value="resolved">Resolved</option>
+      </select>
+    </div>
+    <div id="respond-msg"></div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModals()">Cancel</button>
+      <button class="btn btn-success" onclick="submitResponse()">Submit Response</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/sidebar.js"></script>
+<script src="js/complaints.js"></script>
+</body></html>

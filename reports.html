@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Reports — InvenTrack</title><link rel="stylesheet" href="css/style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+.insight-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px;margin-bottom:24px}
+.insight-card{background:var(--surface);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);border:1px solid var(--border);border-left:4px solid var(--primary)}
+.insight-card.green{border-left-color:var(--success)}.insight-card.orange{border-left-color:var(--warning)}.insight-card.red{border-left-color:var(--danger)}.insight-card.blue{border-left-color:var(--primary)}.insight-card.purple{border-left-color:var(--purple)}
+.insight-card h3{font-size:20px;font-weight:700;color:var(--text);margin-bottom:4px}
+.insight-card p{font-size:12px;color:var(--text-muted)}.insight-card span{font-size:11px;font-weight:600;color:var(--success)}
+@media print{.sidebar,.topbar,.tab-bar,.period-bar{display:none!important}.main-content{margin-left:0}.tab-content{display:block!important}}
+</style>
+</head>
+<body>
+<div class="app-shell">
+  <button class="sidebar-toggle" id="sidebar-toggle">☰</button>
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+  <nav class="sidebar" id="sidebar"></nav>
+  <div class="main-content">
+    <div class="topbar">
+      <div class="topbar-left"><h1>Reports & Analytics</h1><div class="breadcrumb" id="last-updated"></div></div>
+      <div class="topbar-right"><button class="btn btn-outline btn-sm" onclick="window.print()">🖨 Print</button></div>
+    </div>
+    <div class="page-content fade-in">
+      <div class="tab-bar" id="tab-bar"></div>
+
+      <!-- Overview -->
+      <div class="tab-content" id="tab-overview">
+        <div class="insight-grid">
+          <div class="insight-card green"><h3 id="a-revenue">—</h3><p>Total Revenue</p><span id="a-revenue-sub"></span></div>
+          <div class="insight-card blue"><h3 id="a-products">—</h3><p>Total Products</p><span id="a-products-sub"></span></div>
+          <div class="insight-card orange"><h3 id="a-sales-count">—</h3><p>Total Sales</p><span id="a-sales-sub"></span></div>
+          <div class="insight-card red"><h3 id="a-lowstock">—</h3><p>Low Stock</p><span id="a-lowstock-sub"></span></div>
+          <div class="insight-card blue"><h3 id="a-purchases">—</h3><p>Purchases</p><span id="a-purchases-sub"></span></div>
+          <div class="insight-card green"><h3 id="a-profit">—</h3><p>Gross Profit</p><span id="a-profit-sub"></span></div>
+        </div>
+        <div class="charts-grid">
+          <div class="chart-card"><h3>Revenue vs Cost</h3><canvas id="revenueChart"></canvas></div>
+          <div class="chart-card"><h3>Stock by Category</h3><canvas id="categoryChart"></canvas></div>
+        </div>
+      </div>
+
+      <!-- Period Sales -->
+      <div class="tab-content" id="tab-period">
+        <div class="period-bar">
+          <span style="font-size:12px;color:var(--text-muted);font-weight:600">Period:</span>
+          <button class="period-btn" onclick="loadPeriod('daily',this)">Daily</button>
+          <button class="period-btn active" onclick="loadPeriod('weekly',this)">Weekly</button>
+          <button class="period-btn" onclick="loadPeriod('monthly',this)">Monthly</button>
+          <button class="period-btn" onclick="loadPeriod('quarterly',this)">Quarterly</button>
+          <button class="period-btn" onclick="loadPeriod('yearly',this)">Yearly</button>
+          <button class="btn btn-outline btn-sm" style="margin-left:auto" onclick="window.print()">Export</button>
+        </div>
+        <div class="insight-grid">
+          <div class="insight-card green"><h3 id="p-revenue">—</h3><p>Revenue</p><span id="p-period-label"></span></div>
+          <div class="insight-card orange"><h3 id="p-count">—</h3><p>Sales count</p></div>
+          <div class="insight-card blue"><h3 id="p-qty">—</h3><p>Units sold</p></div>
+          <div class="insight-card green"><h3 id="p-avg">—</h3><p>Avg per sale</p></div>
+        </div>
+        <div class="charts-grid">
+          <div class="chart-card chart-full"><h3 id="period-chart-title">Sales Trend</h3><canvas id="periodTrendChart"></canvas></div>
+        </div>
+        <div class="charts-grid">
+          <div class="chart-card"><h3>Top 5 Products</h3><canvas id="periodTopChart"></canvas></div>
+          <div class="chart-card">
+            <h3>Sales in Period</h3>
+            <div style="max-height:240px;overflow-y:auto">
+              <table><thead><tr><th>Product</th><th>Qty</th><th>Total</th><th>Date</th><th>By</th></tr></thead>
+              <tbody id="period-sales-table"></tbody></table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Inventory -->
+      <div class="tab-content" id="tab-inventory">
+        <div class="charts-grid">
+          <div class="chart-card"><h3>Top 5 Low Stock</h3><canvas id="lowStockChart"></canvas></div>
+          <div class="chart-card"><h3>Value by Category</h3><canvas id="invValueChart"></canvas></div>
+        </div>
+        <div class="card">
+          <div class="card-title" style="margin-bottom:16px">Category Breakdown</div>
+          <div class="table-wrap"><table><thead><tr><th>Category</th><th>Products</th><th>Qty</th><th>Value</th><th>Share</th></tr></thead>
+          <tbody id="category-table"></tbody></table></div>
+        </div>
+      </div>
+
+      <!-- Data Tables -->
+      <div class="tab-content" id="tab-tables">
+        <div class="card" style="margin-bottom:20px">
+          <div class="card-header"><div class="card-title">Recent Sales</div><span id="sales-count-label" style="font-size:13px;color:var(--text-muted)"></span></div>
+          <div class="table-wrap"><table><thead><tr><th>Product</th><th>Qty</th><th>Total</th><th>Date</th><th>Sold By</th></tr></thead>
+          <tbody id="sales-table"></tbody></table></div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">All Products</div>
+            <input class="search-input" id="search-box" placeholder="Search..." oninput="filterProducts()">
+          </div>
+          <div class="table-wrap"><table><thead><tr><th>Name</th><th>Category</th><th>Qty</th><th>Price</th><th>Value</th><th>Status</th></tr></thead>
+          <tbody id="products-table"></tbody></table></div>
+        </div>
+      </div>
+
+      <!-- Manager Logs (admin only) -->
+      <div class="tab-content" id="tab-manager-logs">
+        <div class="card">
+          <div class="card-title" style="margin-bottom:8px">Report Generation Log</div>
+          <p style="font-size:13px;color:var(--text-muted);margin-bottom:16px">Every report generated by managers and admins is tracked here.</p>
+          <div class="table-wrap"><table><thead><tr><th>Generated By</th><th>Role</th><th>Report</th><th>Period</th><th>Date & Time</th></tr></thead>
+          <tbody id="log-table"></tbody></table></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="js/sidebar.js"></script>
+<script src="js/reports.js"></script>
+</body></html>

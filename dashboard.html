@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Home — InvenTrack</title><link rel="stylesheet" href="css/style.css"></head>
+<body>
+<div class="app-shell">
+  <button class="sidebar-toggle" id="sidebar-toggle">☰</button>
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+  <nav class="sidebar" id="sidebar"></nav>
+  <div class="main-content">
+    <div class="topbar">
+      <div class="topbar-left"><h1>Home</h1><div class="breadcrumb" id="topbar-sub">Welcome back</div></div>
+      <div class="topbar-right">
+        <div class="topbar-btn" id="alert-btn" onclick="window.location.href='alerts.html'" title="Stock Alerts">🔔</div>
+        <div class="topbar-btn" onclick="window.location.href='profile.html'" title="Profile">👤</div>
+      </div>
+    </div>
+    <div class="page-content fade-in">
+      <!-- Admin/Manager view -->
+      <div id="admin-view">
+        <div class="stats-grid">
+          <div class="stat-card blue"><div class="stat-icon">📦</div><h3 id="total-products">—</h3><p>Total Products</p></div>
+          <div class="stat-card green"><div class="stat-icon">💰</div><h3 id="total-value">—</h3><p>Inventory Value</p></div>
+          <div class="stat-card red"><div class="stat-icon">⚠️</div><h3 id="low-stock">—</h3><p>Low Stock Items</p></div>
+          <div class="stat-card orange"><div class="stat-icon">🛒</div><h3 id="total-sales">—</h3><p>Total Sales</p></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+          <div class="card">
+            <div class="card-header">
+              <div><div class="card-title">Stock Alerts</div><div class="card-subtitle" id="alert-count-label">Loading...</div></div>
+              <a href="alerts.html" class="btn btn-sm btn-outline">View all →</a>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Product</th><th>Qty</th><th>Reorder</th><th>Action</th></tr></thead>
+                <tbody id="low-stock-table"><tr><td colspan="4" style="text-align:center;color:var(--text-muted);padding:16px">Loading...</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <div><div class="card-title">Open Complaints</div><div class="card-subtitle">Pending resolution</div></div>
+              <a href="complaints.html" class="btn btn-sm btn-outline">View all →</a>
+            </div>
+            <div id="complaints-preview"><div style="text-align:center;color:var(--text-muted);padding:24px">Loading...</div></div>
+          </div>
+        </div>
+      </div>
+      <!-- Staff view -->
+      <div id="staff-view" style="display:none">
+        <div class="card" style="background:linear-gradient(135deg,#0f172a,#1e3a5f);border:none;margin-bottom:20px">
+          <h3 style="color:white;font-size:18px;margin-bottom:6px">Good day, <span id="staff-name"></span> 👋</h3>
+          <p style="color:rgba(255,255,255,0.6);font-size:13px">Record sales using the Quick Sale form below.</p>
+        </div>
+        <div style="display:grid;grid-template-columns:360px 1fr;gap:20px;align-items:start">
+          <div class="card">
+            <div class="card-title" style="margin-bottom:16px">Quick Sale</div>
+            <div class="form-group"><label>Select Product</label>
+              <select id="staff-product" style="width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-size:14px;font-family:var(--font)"></select>
+            </div>
+            <div class="form-group"><label>Quantity</label><input id="staff-qty" type="number" min="1" value="1"></div>
+            <button class="btn btn-success" style="width:100%;justify-content:center" onclick="quickSale()">Record Sale ✓</button>
+            <div id="staff-sale-msg" style="margin-top:12px"></div>
+          </div>
+          <div class="card">
+            <div class="card-header"><div class="card-title">My Recent Sales</div></div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Product</th><th>Qty</th><th>Total</th><th>Date</th></tr></thead>
+                <tbody id="staff-sales-table"><tr><td colspan="4" style="text-align:center;color:var(--text-muted);padding:16px">Loading...</td></tr></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="js/sidebar.js"></script>
+<script src="js/dashboard.js"></script>
+</body></html>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Users — InvenTrack</title><link rel="stylesheet" href="css/style.css"></head>
+<body>
+<div class="app-shell">
+  <button class="sidebar-toggle" id="sidebar-toggle">☰</button>
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+  <nav class="sidebar" id="sidebar"></nav>
+  <div class="main-content">
+    <div class="topbar">
+      <div class="topbar-left"><h1>User Management</h1><div class="breadcrumb">Admin only</div></div>
+      <div class="topbar-right"><button class="btn btn-primary btn-sm" onclick="toggleForm()">+ Add User</button></div>
+    </div>
+    <div class="page-content fade-in">
+      <div class="card" style="margin-bottom:20px">
+        <div style="display:flex;gap:24px;flex-wrap:wrap;font-size:13px;align-items:center">
+          <div style="display:flex;align-items:center;gap:8px"><span class="badge badge-green">admin</span> Full access</div>
+          <div style="display:flex;align-items:center;gap:8px"><span class="badge badge-orange">manager</span> Reports + products</div>
+          <div style="display:flex;align-items:center;gap:8px"><span class="badge badge-red">staff</span> Record sales</div>
+          <div style="display:flex;align-items:center;gap:8px"><span class="badge badge-green">Active</span> Can login</div>
+          <div style="display:flex;align-items:center;gap:8px"><span class="badge badge-red">Inactive</span> Blocked from login</div>
+        </div>
+      </div>
+      <div class="card" id="user-form" style="display:none;margin-bottom:20px">
+        <div class="card-title" style="margin-bottom:16px">Add New User</div>
+        <div class="form-grid-2">
+          <div class="form-group"><label>Full Name</label><input id="u-name" type="text" placeholder="Full Name"></div>
+          <div class="form-group"><label>Email</label><input id="u-email" type="email" placeholder="Email"></div>
+          <div class="form-group"><label>Password</label><input id="u-password" type="password" placeholder="Password"></div>
+          <div class="form-group"><label>Role</label>
+            <select id="u-role">
+              <option value="staff">Staff</option>
+              <option value="manager">Manager</option>
+              <option value="admin">Admin</option>
+            </select>
+          </div>
+        </div>
+        <div style="display:flex;gap:10px">
+          <button class="btn btn-success" onclick="addUser()">Create User</button>
+          <button class="btn btn-outline" onclick="toggleForm()">Cancel</button>
+        </div>
+        <div id="form-msg" style="margin-top:12px"></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">Team Members</div><span id="user-count" style="font-size:13px;color:var(--text-muted)"></span></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>User</th><th>Role</th><th>Joined</th><th>Salary</th><th>Status</th><th>Change Role</th><th>Actions</th></tr></thead>
+            <tbody id="users-table"><tr><td colspan="7" style="text-align:center;color:var(--text-muted);padding:24px">Loading...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal-overlay" id="password-modal" onclick="if(event.target===this)closeModal()">
+  <div class="modal-box"><h3>Reset Password</h3><p>Set new password for <strong id="modal-username"></strong></p>
+    <input type="hidden" id="modal-user-id">
+    <div class="form-group"><label>New Password</label><input type="password" id="modal-new-password" placeholder="Min 4 characters"></div>
+    <div id="modal-msg" style="font-size:13px;min-height:18px"></div>
+    <div class="modal-footer"><button class="btn btn-outline" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="savePassword()">Save</button></div>
+  </div>
+</div>
+<div class="modal-overlay" id="salary-modal" onclick="if(event.target===this)closeModal()">
+  <div class="modal-box"><h3>Set Monthly Salary</h3><p>For <strong id="salary-username"></strong></p>
+    <input type="hidden" id="salary-user-id">
+    <div class="form-group"><label>Monthly Salary (₹)</label><input type="number" id="salary-amount" min="0"></div>
+    <div id="salary-msg" style="font-size:13px;min-height:18px"></div>
+    <div class="modal-footer"><button class="btn btn-outline" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="saveSalary()">Save</button></div>
+  </div>
+</div>
+<script src="js/sidebar.js"></script>
+<script src="js/users.js"></script>
+</body></html>

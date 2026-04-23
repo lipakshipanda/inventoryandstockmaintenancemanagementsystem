@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Sales — InvenTrack</title><link rel="stylesheet" href="css/style.css"></head>
+<body>
+<div class="app-shell">
+  <button class="sidebar-toggle" id="sidebar-toggle">☰</button>
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+  <nav class="sidebar" id="sidebar"></nav>
+  <div class="main-content">
+    <div class="topbar">
+      <div class="topbar-left"><h1>Sales</h1><div class="breadcrumb">Record and view sales transactions</div></div>
+    </div>
+    <div class="page-content fade-in">
+      <div id="sale-form-card" class="card" style="max-width:520px;margin-bottom:24px">
+        <div class="card-title" style="margin-bottom:16px">Record a Sale</div>
+        <div class="form-group"><label>Select Product</label>
+          <select id="sale-product" style="width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-size:14px;font-family:var(--font)"></select>
+        </div>
+        <div class="form-group"><label>Quantity</label><input id="sale-qty" type="number" min="1" value="1"></div>
+        <button class="btn btn-success" onclick="recordSale()">Record Sale ✓</button>
+        <div id="sale-msg" style="margin-top:12px"></div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Recent Sales</div>
+          <span id="sales-total-label" style="font-size:13px;color:var(--text-muted)"></span>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Product</th><th>Qty</th><th>Unit Price</th><th>Total</th><th>Date</th><th>Sold By</th></tr></thead>
+            <tbody id="sales-table"><tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:24px">Loading...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="js/sidebar.js"></script>
+<script src="js/sales.js"></script>
+</body></html>

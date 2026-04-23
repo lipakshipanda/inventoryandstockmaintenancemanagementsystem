@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Login — InvenTrack</title><link rel="stylesheet" href="css/style.css"></head>
+<body>
+<div class="login-page">
+  <div class="login-left">
+    <div class="brand"><div class="brand-icon">📦</div><div class="brand-name">InvenTrack</div></div>
+    <h1>Iventory & Stock <br> <span>Maintenance Management </span><br>System</h1>
+    <p>A complete system to track stock, manage sales, generate reports and keep your team aligned.</p>
+    <div class="login-features">
+      <div class="login-feature"><div class="feat-icon">📊</div> Real-time stock tracking and analytics</div>
+      <div class="login-feature"><div class="feat-icon">👥</div> Role-based access for Admin, Manager and Staff</div>
+      <div class="login-feature"><div class="feat-icon">🔔</div> Automatic low-stock alerts and reorder system</div>
+      <div class="login-feature"><div class="feat-icon">📋</div> Built-in complaint and resolution tracking</div>
+    </div>
+  </div>
+  <div class="login-right">
+    <div class="login-box">
+      <div class="login-title">Welcome back</div>
+      <div class="login-sub">Sign in to your account to continue</div>
+      <div id="msg"></div>
+      <div class="form-group"><label>Email Address</label><input type="email" id="email" placeholder="you@company.com" onkeydown="if(event.key==='Enter')login()"></div>
+      <div class="form-group"><label>Password</label><input type="password" id="password" placeholder="Enter your password" onkeydown="if(event.key==='Enter')login()"></div>
+      <button class="btn btn-primary" style="width:100%;padding:12px;font-size:14px;justify-content:center;margin-top:4px" onclick="login()">Sign In →</button>
+      <p style="text-align:center;margin-top:20px;font-size:12px;color:var(--text-muted)">Don't have an account? Contact your administrator.</p>
+    </div>
+  </div>
+</div>
+<script>
+if(localStorage.getItem('token'))window.location.href='dashboard.html';
+async function login(){
+  const email=document.getElementById('email').value.trim();
+  const password=document.getElementById('password').value.trim();
+  const msgEl=document.getElementById('msg');
+  if(!email||!password){msgEl.innerHTML='<div class="alert alert-danger">Please enter email and password.</div>';return;}
+  const res=await fetch('/api/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password})});
+  const data=await res.json();
+  if(res.ok){
+    localStorage.setItem('token',data.token);
+    localStorage.setItem('user',JSON.stringify(data));
+    window.location.href='dashboard.html';
+  } else {
+    msgEl.innerHTML=`<div class="alert alert-danger">${data.message}</div>`;
+  }
+}
+</script>
+</body></html>
